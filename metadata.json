@@ -1,0 +1,7 @@
+{
+  "name": "Thầy Minh - vẽ hình",
+  "description": "Phần mềm mô phỏng hình học động chuyên nghiệp cho giáo dục THCS (Lớp 6-9). Tích hợp công cụ thước kẻ, compa, thước đo độ, ê-ke kỹ thuật số và Trợ lý AI Thầy Minh.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
