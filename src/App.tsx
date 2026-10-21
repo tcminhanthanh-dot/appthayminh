@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import {
   GeoPoint,
   GeoLine,
@@ -63,10 +64,23 @@ export default function App() {
 
   // UI Modals & Sidebars
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isToolbarVisible, setIsToolbarVisible] = useState(true);
   const [isEuclidTutorOpen, setIsEuclidTutorOpen] = useState(false);
   const [isAiDgsModalOpen, setIsAiDgsModalOpen] = useState(false);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   const [isQuestModalOpen, setIsQuestModalOpen] = useState(false);
+
+  // Keyboard shortcut Ctrl+H to toggle top toolbar visibility
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'h') {
+        e.preventDefault();
+        setIsToolbarVisible((v) => !v);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Digital Instruments
   const [ruler, setRuler] = useState<RulerInstrument>({
@@ -717,6 +731,8 @@ export default function App() {
         onQuickPolygonPreset={handleQuickPolygonPreset}
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
+        isToolbarVisible={isToolbarVisible}
+        setIsToolbarVisible={setIsToolbarVisible}
       />
 
       {/* 2. DGS Vector Geometry Canvas */}
@@ -787,6 +803,8 @@ export default function App() {
           onExportWordDoc={handleExportWordDoc}
           onExportSlideDeck={handleExportSlideDeck}
           onImportJSON={handleImportJSON}
+          isToolbarVisible={isToolbarVisible}
+          onClose={() => setIsSidebarOpen(false)}
         />
       )}
 
@@ -838,6 +856,16 @@ export default function App() {
           <span>Tỉ lệ: 1 cm = {PIXELS_PER_CM}px</span>
           <span className="text-slate-400">|</span>
           <span>Thu phóng: {Math.round(transform.zoom * 100)}%</span>
+          <span className="text-slate-400">|</span>
+          <button
+            type="button"
+            onClick={() => setIsToolbarVisible((v) => !v)}
+            className="flex items-center gap-1.5 font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+            title="Ẩn hoặc Hiện thanh công cụ (Phím tắt: Ctrl + H)"
+          >
+            {isToolbarVisible ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+            <span>{isToolbarVisible ? 'Ẩn thanh công cụ' : 'Hiện thanh công cụ'}</span>
+          </button>
         </div>
       </div>
     </div>
