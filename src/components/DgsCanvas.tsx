@@ -803,9 +803,6 @@ export const DgsCanvas: React.FC<DgsCanvasProps> = ({
                     )}
                   </>
                 )}
-                  stroke={ang.color}
-                  strokeWidth="2"
-                />
                 {ang.showDegrees && (
                   <text
                     x={vertex.x + (ang.size + 14) * Math.cos((a1 + a2) / 2)}
