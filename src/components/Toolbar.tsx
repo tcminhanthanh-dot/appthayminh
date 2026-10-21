@@ -34,6 +34,9 @@ import {
   Type,
   Palette,
   Trophy,
+  Eye,
+  EyeOff,
+  ChevronUp,
 } from 'lucide-react';
 import { PRESET_DEMOS, PresetDemo } from '../utils/presets';
 
@@ -68,6 +71,8 @@ interface ToolbarProps {
   onQuickPolygonPreset?: (type: 'equilateral_triangle' | 'right_triangle' | 'rectangle' | 'square') => void;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (v: boolean | ((prev: boolean) => boolean)) => void;
+  isToolbarVisible: boolean;
+  setIsToolbarVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
@@ -101,6 +106,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onQuickPolygonPreset,
   isSidebarOpen,
   setIsSidebarOpen,
+  isToolbarVisible,
+  setIsToolbarVisible,
 }) => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -108,23 +115,71 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     setOpenDropdown(openDropdown === name ? null : name);
   };
 
+  if (!isToolbarVisible) {
+    return (
+      <div className="absolute top-3 left-3 z-30 pointer-events-auto flex items-center gap-2 animate-in fade-in duration-200">
+        <button
+          type="button"
+          onClick={() => setIsToolbarVisible(true)}
+          className="px-3.5 py-2 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-xl border border-blue-500/40 text-xs font-bold text-slate-800 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-500 transition flex items-center gap-2 cursor-pointer group"
+          title="Hiện lại thanh công cụ vẽ (Phím tắt: Ctrl + H)"
+        >
+          <Eye className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
+          <span>Hiện Thanh Công Cụ</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 font-mono">
+            Ctrl+H
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsSidebarOpen((v) => !v)}
+          className={`px-3 py-2 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-xl border border-slate-200/80 dark:border-slate-800 text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
+            isSidebarOpen ? 'text-blue-600 border-blue-500/50' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+          }`}
+          title={isSidebarOpen ? 'Ẩn bảng thuộc tính bên phải' : 'Hiện bảng thuộc tính bên phải'}
+        >
+          <Layers className="w-4 h-4" />
+          <span className="hidden sm:inline">{isSidebarOpen ? 'Ẩn Bảng Phải' : 'Hiện Bảng Phải'}</span>
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="absolute top-3 left-3 right-3 z-30 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-      {/* Pod 1: App Brand Logo & Name */}
-      <div className="pointer-events-auto flex items-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 px-3.5 py-1.5 gap-2.5">
-        <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-blue-500/25">
+      {/* Pod 1: App Brand Logo & Name + Quick Collapse */}
+      <div className="pointer-events-auto flex items-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 px-3 py-1.5 gap-2 shrink-0">
+        <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-blue-500/25 shrink-0">
           <Sparkles className="w-4 h-4" />
         </div>
         <div className="flex flex-col">
           <div className="flex items-center gap-1.5">
-            <span className="text-xs font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-xs font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent whitespace-nowrap">
               Thầy Minh - vẽ hình
             </span>
             <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-md bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300">
               THCS
             </span>
           </div>
-          <span className="text-[10px] font-medium text-slate-400">
+          <span className="text-[10px] font-medium text-slate-400 whitespace-nowrap hidden sm:inline">
+            Hình Học Động &amp; Thước Compa
+          </span>
+        </div>
+
+        <div className="w-[1px] h-5 bg-slate-200 dark:bg-slate-800 mx-1" />
+
+        {/* Nút Ẩn Thanh Công Cụ ngay ở Brand Pod */}
+        <button
+          type="button"
+          onClick={() => setIsToolbarVisible(false)}
+          className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer flex items-center gap-1"
+          title="Ẩn thanh công cụ (Phím tắt: Ctrl + H)"
+        >
+          <ChevronUp className="w-4 h-4" />
+          <span className="text-[11px] font-semibold hidden md:inline">Ẩn</span>
+        </button>
+      </div>
             Hình Học Động &amp; Thước Compa
           </span>
         </div>
@@ -843,9 +898,19 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           className={`p-1.5 rounded-xl transition cursor-pointer ${
             isSidebarOpen ? 'bg-blue-600 text-white' : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
           }`}
-          title="Ẩn/Hiện Bảng Thông Số &amp; Thuộc Tính"
+          title="Ẩn/Hiện Bảng Thuộc Tính Bên Phải"
         >
           <Layers className="w-4 h-4" />
+        </button>
+
+        {/* Nút Ẩn Thanh Công Cụ (Hide Toolbar) */}
+        <button
+          type="button"
+          onClick={() => setIsToolbarVisible(false)}
+          className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
+          title="Ẩn toàn bộ thanh công cụ trên (Ctrl+H)"
+        >
+          <EyeOff className="w-4 h-4" />
         </button>
       </div>
     </div>
