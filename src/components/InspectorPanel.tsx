@@ -23,6 +23,7 @@ import {
   Type,
   Bold,
   Italic,
+  X,
 } from 'lucide-react';
 
 interface InspectorPanelProps {
