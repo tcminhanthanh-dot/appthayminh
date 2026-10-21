@@ -46,6 +46,8 @@ interface InspectorPanelProps {
   onExportWordDoc?: () => void;
   onExportSlideDeck?: () => void;
   onImportJSON: (file: File) => void;
+  isToolbarVisible?: boolean;
+  onClose?: () => void;
 }
 
 const COLOR_PALETTE = [
@@ -80,6 +82,8 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({
   onExportWordDoc,
   onExportSlideDeck,
   onImportJSON,
+  isToolbarVisible = true,
+  onClose,
 }) => {
   const [activeTab, setActiveTab] = useState<'selected' | 'list' | 'export'>('selected');
 
@@ -95,9 +99,13 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({
   const selectedText = selectedType === 'text' ? texts.find((t) => t.id === selectedId) : null;
 
   return (
-    <div className="absolute top-16 right-3 bottom-3 w-84 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-200/80 dark:border-slate-800 flex flex-col z-20 overflow-hidden text-xs">
-      {/* Header Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-1 gap-1">
+    <div
+      className={`absolute ${
+        isToolbarVisible ? 'top-24 lg:top-16' : 'top-3'
+      } right-3 bottom-3 w-84 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-200/80 dark:border-slate-800 flex flex-col z-20 overflow-hidden text-xs transition-all duration-200`}
+    >
+      {/* Header Tabs & Close button */}
+      <div className="flex items-center border-b border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-1 gap-1">
         <button
           type="button"
           onClick={() => setActiveTab('selected')}
@@ -136,6 +144,17 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({
           <Download className="w-3.5 h-3.5" />
           <span>Xuất Bản</span>
         </button>
+
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 rounded-xl hover:bg-slate-200/80 dark:hover:bg-slate-700/80 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition cursor-pointer shrink-0"
+            title="Đóng bảng thuộc tính"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        )}
       </div>
 
       {/* Tab 1: Selected Object Inspector */}
