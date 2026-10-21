@@ -180,10 +180,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           <span className="text-[11px] font-semibold hidden md:inline">Ẩn</span>
         </button>
       </div>
-            Hình Học Động &amp; Thước Compa
-          </span>
-        </div>
-      </div>
 
       {/* Pod 2: Geometric Drawing Tools */}
       <div className="pointer-events-auto flex items-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 p-1.5 gap-1">
